@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eo pipefail
+service ssh start
 
 if [[ ! -f /root/password ]]; then
   if [ -z "$USER_PASSWORD" ] || [ "$USER_PASSWORD" = "random_see_log" ]; then

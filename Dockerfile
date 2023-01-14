@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
   openjdk-17-jre-headless \
   openjdk-8-jre-headless \
   ca-certificates-java \
+  openssh-server \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 #install node from nodesource following instructions: https://github.com/nodesource/distributions#debinstall
@@ -47,7 +48,10 @@ CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-EXPOSE 8443 25565-25570
+#add default dir to sshd_config 
+RUN sed -i "$ a ForceCommand internal-sftp -d /var/games/minecraft" /etc/ssh/sshd_config
+
+EXPOSE 8443 25565-25570 22
 VOLUME /var/games/minecraft
 
 ENV USER_PASSWORD=random_see_log USER_NAME=mc USER_UID=1000 USE_HTTPS=true SERVER_PORT=8443
